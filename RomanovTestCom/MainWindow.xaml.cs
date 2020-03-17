@@ -12,7 +12,6 @@ namespace RomanovTestCom
     /// </summary>
     public partial class MainWindow : Window
     {
-        private static readonly Regex regex = new Regex("[^0-9.-]+");
         public MainWindow()
         {
             InitializeComponent();
@@ -23,9 +22,17 @@ namespace RomanovTestCom
 
         private void Grid_Loaded(object sender, RoutedEventArgs e)
         {
-            cbPorts.ItemsSource = ComPort.GetAllNamesPort();
-            cbPorts.SelectedIndex = 0;
-            currentPort = new ComPort(cbPorts.SelectedValue.ToString());
+            try
+            {
+                cbPorts.ItemsSource = ComPort.GetAllNamesPort();
+                cbPorts.SelectedIndex = 0;
+                currentPort = new ComPort(cbPorts.SelectedValue.ToString());
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Отсутствуют доступные COM порты");
+            }
+            
         }
 
         private void cbPorts_DropDownOpened(object sender, EventArgs e)
@@ -80,8 +87,6 @@ namespace RomanovTestCom
             {
                 MessageBox.Show(expt.Message);
             }
-            
-
             changeBtnConnect();
         }
 

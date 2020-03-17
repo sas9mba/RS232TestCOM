@@ -12,7 +12,7 @@ namespace RomanovTestCom
 
         public ComPort(String namePort)
         {
-            port = new SerialPort(namePort, 9600);
+            port = new SerialPort(namePort);
         }
 
         ~ComPort()
@@ -54,7 +54,7 @@ namespace RomanovTestCom
         /// <param name="countBit"></param>
         /// <param name="ParityRule"></param>
         /// <param name="countStopBit"></param>
-        public void SetPortSettings(Int32 valSpeed=9600, Int32 countBit=8, Int32 ParityRule=0, int countStopBit = 1)
+        public void SetPortSettings(Int32 countBit = 8, Int32 valSpeed =9600, Int32 ParityRule=0, int countStopBit = 1)
         {
             port.StopBits = (StopBits)countStopBit;
             port.BaudRate = valSpeed;
@@ -94,7 +94,8 @@ namespace RomanovTestCom
         {
             try
             {
-                byte[] msgBytes = msg.Bytes;
+                byte[] msgBytes = new byte[msg.Bytes.Length];
+                msg.Bytes.CopyTo(msgBytes, 0);
                 port.Write(msgBytes, 0, msgBytes.Length);
                 return $"Отправлено сообщение: {msg.GetHex()} \n";
             }
