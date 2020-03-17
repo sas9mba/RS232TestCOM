@@ -6,7 +6,7 @@ namespace RomanovTestCom
     /// <summary>
     /// Класс собщений для ввода в формате HEX
     /// </summary>
-    class HEXMsg : IMsg
+    public class HEXMsg : IMsg
     {
         private byte[] msg;
 

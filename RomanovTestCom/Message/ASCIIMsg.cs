@@ -6,7 +6,7 @@ namespace RomanovTestCom
     /// <summary>
     /// Класс сообщения для в вода в формате ASCII
     /// </summary>
-    class ASCIIMsg : IMsg
+    public class ASCIIMsg : IMsg
     {
         byte[] msg;
         public byte[] Bytes { get { return msg; }}

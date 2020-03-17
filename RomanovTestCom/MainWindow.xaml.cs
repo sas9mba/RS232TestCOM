@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RomanovTestCom.Common;
+using System;
 using System.IO.Ports;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -139,7 +140,7 @@ namespace RomanovTestCom
 
         private void tbSpeedVol_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key>=Key.D0 && e.Key <= Key.D9) 
+            if (Checks.KeyIsNumber(e.Key)) 
             {
                 return;
             }
