@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO.Ports;
+using System.Threading;
 
 namespace RomanovTestCom
 {
@@ -9,7 +10,6 @@ namespace RomanovTestCom
         /// COM порт
         /// </summary>
         SerialPort port;
-
         public ComPort(String namePort)
         {
             port = new SerialPort(namePort);
@@ -95,15 +95,20 @@ namespace RomanovTestCom
             try
             {
                 byte[] msgBytes = new byte[msg.Bytes.Length];
+                String msgStr = msg.GetHex();
                 msg.Bytes.CopyTo(msgBytes, 0);
+                Monitor.Enter(port);
                 port.Write(msgBytes, 0, msgBytes.Length);
-                return $"Отправлено сообщение: {msg.GetHex()} \n";
+                return $"Отправлено сообщение: {msgStr} \n";
             }
             catch (Exception)
             {
                 return $"Не удалось отправить сообщение: {msg.GetHex()} \n";
             }
-            
+            finally
+            {
+                Monitor.Exit(port);
+            }
         }
 
         /// <summary>

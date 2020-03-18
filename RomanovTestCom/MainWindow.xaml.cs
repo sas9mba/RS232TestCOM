@@ -1,7 +1,7 @@
 ﻿using RomanovTestCom.Common;
+using RomanovTestCom.Message;
 using System;
 using System.IO.Ports;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -19,7 +19,8 @@ namespace RomanovTestCom
         }
 
         private ComPort currentPort;
-        private IMsg currentMsg = new HEXMsg();
+        private IMsg currentMsg;
+        FabricMessage fabricMsg = new FabricMessage(MessageType.HEX);
 
         private void Grid_Loaded(object sender, RoutedEventArgs e)
         {
@@ -96,12 +97,13 @@ namespace RomanovTestCom
             
             if ((Boolean)rbMsgASCII.IsChecked)
             {
-                currentMsg = new ASCIIMsg();
+                fabricMsg.SetTypeMsg(MessageType.ASCII);
             }
             else
             {
-                currentMsg = new HEXMsg();
+                fabricMsg.SetTypeMsg(MessageType.HEX);
             }
+            currentMsg = fabricMsg.GetObjMsg();
             tbMessege.Clear();
         }
 
@@ -121,6 +123,7 @@ namespace RomanovTestCom
         {
             if(currentPort.IsOpen())
             {
+                currentMsg = fabricMsg.GetObjMsg();
                 currentMsg.SetMessage(tbMessege.Text);
                 tbLog.AppendText(await Task.Factory.StartNew<string>(() => currentPort.Send(currentMsg)));
             }

@@ -22,6 +22,7 @@ namespace ComTest
         [Theory]
         [InlineData("AsD", new byte[] { 65, 115, 68 })]
         [InlineData("0Ac", new byte[] { 48, 65, 99 })]
+        [InlineData("-+-", new byte[] { 45, 43, 45 })]
         public void TestConvertToByte(String inText, Byte[] outByte)
         {
             ASCIIMsg msg = new ASCIIMsg();
