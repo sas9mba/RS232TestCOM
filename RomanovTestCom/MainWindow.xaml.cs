@@ -125,7 +125,8 @@ namespace RomanovTestCom
             {
                 currentMsg = fabricMsg.GetObjMsg();
                 currentMsg.SetMessage(tbMessege.Text);
-                tbLog.AppendText(await Task.Factory.StartNew<string>(() => currentPort.Send(currentMsg)));
+                ComResponse result = await Task.Factory.StartNew<ComResponse>(() => currentPort.Send(currentMsg));
+                tbLog.AppendText(result.TextAnswer);
             }
         }
 
@@ -137,8 +138,8 @@ namespace RomanovTestCom
         private async void OnDataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             
-            String result = await Task.Factory.StartNew<string>(() => ComPort.Read(sender as SerialPort));
-            await Dispatcher.BeginInvoke((Action)(() => this.tbLog.AppendText(result)));
+            ComResponse result = await Task.Factory.StartNew<ComResponse>(() => ComPort.Read(sender as SerialPort));
+            await Dispatcher.BeginInvoke((Action)(() => this.tbLog.AppendText(result.TextAnswer)));
         }
 
         private void tbSpeedVol_KeyDown(object sender, KeyEventArgs e)

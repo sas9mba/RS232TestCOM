@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RomanovTestCom.Message;
+using System;
 using System.IO.Ports;
 using System.Threading;
 
@@ -90,7 +91,7 @@ namespace RomanovTestCom
         /// <typeparam name="T">Тип ограниченный интерфейсом IMsg реализующим преобразования HEX и ASCII</typeparam>
         /// <param name="msg">Объект сообщения которое необходимо отправить</param>
         /// <returns>Статус операции</returns>
-        public String Send<T>(T msg) where T : IMsg
+        public ComResponse Send<T>(T msg) where T : IMsg
         {
             try
             {
@@ -99,11 +100,11 @@ namespace RomanovTestCom
                 msg.Bytes.CopyTo(msgBytes, 0);
                 Monitor.Enter(port);
                 port.Write(msgBytes, 0, msgBytes.Length);
-                return $"Отправлено сообщение: {msgStr} \n";
+                return new ComResponse(port.PortName, $"Отправлено сообщение: {msgStr} \n", true, msgBytes); ;
             }
             catch (Exception)
             {
-                return $"Не удалось отправить сообщение: {msg.GetHex()} \n";
+                return new ComResponse(port.PortName, $"Не удалось отправить сообщение: {msg.GetHex()} \n");
             }
             finally
             {
@@ -116,17 +117,17 @@ namespace RomanovTestCom
         /// </summary>
         /// <param name="port">порт с сообщением</param>
         /// <returns>статус операции</returns>
-        public static String Read(SerialPort port)
+        public static ComResponse Read(SerialPort port)
         {
             try
             {
                 var buffer = new byte[port.BytesToRead];
                 port.Read(buffer, 0, buffer.Length);
-                return $"С порта {port.PortName} принято сообщение: {BitConverter.ToString(buffer).ToUpper()} \n";
+                return new ComResponse(port.PortName, $"С порта {port.PortName} принято сообщение: {BitConverter.ToString(buffer).ToUpper()} \n", true, buffer);
             }
             catch (Exception)
             {
-                return $"Не удалось принять сообщение с порта: {port.PortName} \n";
+                return new ComResponse(port.PortName, $"Не удалось принять сообщение с порта: {port.PortName} \n");
             }
 
         }
